@@ -1,6 +1,5 @@
 package com.practica.lista;
 
-import com.practica.genericas.Coordenada;
 import com.practica.genericas.FechaHora;
 import com.practica.genericas.PosicionPersona;
 
@@ -9,30 +8,24 @@ public class ListaContactos {
 	private int size;
 
 	public void insertarCoordenadas(NodoTemporal aux, PosicionPersona p) {
-		NodoPosicion npActual = aux.getListaCoordenadas();
-		NodoPosicion npAnt=null;
-		boolean npEncontrado = false;
-		while (npActual!=null && !npEncontrado) {
-			if(npActual.getCoordenada().equals(p.getCoordenada())) {
-				npEncontrado=true;
-				npActual.setNumPersonas(npActual.getNumPersonas()+1);
-			}else {
-				npAnt = npActual;
-				npActual = npActual.getSiguiente();
-			}
-		}
-		if(!npEncontrado) {
-			NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),1, null);
-			if(aux.getListaCoordenadas()==null)
-				aux.setListaCoordenadas(npNuevo);
-			else
-				npAnt.setSiguiente(npNuevo);
-		}
+		getCoordinates(p, aux);
 	}
 
-	public void addNewTemporalPosision(NodoTemporal ant, NodoTemporal aux, PosicionPersona p) {
+	public void addNewTemporalPosition(NodoTemporal ant, NodoTemporal aux, PosicionPersona p) {
 		NodoTemporal nuevo = new NodoTemporal();
 		nuevo.setFecha(p.getFechaPosicion());
+		getCoordinates(p, nuevo);
+		if(ant!=null) {
+			nuevo.setSiguiente(aux);
+			ant.setSiguiente(nuevo);
+		}else {
+			nuevo.setSiguiente(lista);
+			lista = nuevo;
+		}
+		this.size++;
+	}
+
+	private void getCoordinates(PosicionPersona p, NodoTemporal nuevo) {
 		NodoPosicion npActual = nuevo.getListaCoordenadas();
 		NodoPosicion npAnt=null;
 		boolean npEncontrado = false;
@@ -52,14 +45,6 @@ public class ListaContactos {
 			else
 				npAnt.setSiguiente(npNuevo);
 		}
-		if(ant!=null) {
-			nuevo.setSiguiente(aux);
-			ant.setSiguiente(nuevo);
-		}else {
-			nuevo.setSiguiente(lista);
-			lista = nuevo;
-		}
-		this.size++;
 	}
 
 	/**
@@ -96,7 +81,7 @@ public class ListaContactos {
 
 		if(!encontrado) {
 
-			addNewTemporalPosision(ant, aux, p);
+			addNewTemporalPosition(ant, aux, p);
 			
 		}
 	}
